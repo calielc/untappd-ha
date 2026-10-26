@@ -1,0 +1,41 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Untappd",
+        "description": "Untappd closed its public API, so this reads your public profile page (untappd.com/user/<username>). Your profile must be public.",
+        "data": { "username": "Untappd username" }
+      }
+    },
+    "error": {
+      "user_not_found": "No Untappd user with that name.",
+      "profile_unreadable": "The profile could not be read. It may be private, or Untappd changed its page.",
+      "cannot_connect": "Could not reach untappd.com."
+    },
+    "abort": { "already_configured": "This Untappd user is already configured." }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "data": { "scan_interval": "Update interval (minutes)" }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "total": { "name": "Total check-ins" },
+      "unique": { "name": "Unique beers" },
+      "badges": { "name": "Badges" },
+      "friends": { "name": "Friends" },
+      "last_checkin": { "name": "Last check-in" },
+      "last_beer": { "name": "Last beer" },
+      "last_rating": { "name": "Last rating" }
+    },
+    "event": {
+      "checkin": {
+        "name": "Check-in",
+        "state_attributes": { "event_type": { "state": { "new_checkin": "New check-in" } } }
+      }
+    }
+  }
+}

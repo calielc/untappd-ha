@@ -1,0 +1,25 @@
+name: Release
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  zip:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check manifest version matches the tag
+        run: |
+          version=$(python3 -c "import json;print(json.load(open('custom_components/untappd/manifest.json'))['version'])")
+          [ "v$version" = "${{ github.event.release.tag_name }}" ] || [ "$version" = "${{ github.event.release.tag_name }}" ] \
+            || { echo "manifest version $version does not match tag ${{ github.event.release.tag_name }}"; exit 1; }
+      - name: Zip integration
+        run: cd custom_components/untappd && zip -r ../../untappd.zip .
+      - name: Upload asset
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "${{ github.event.release.tag_name }}" untappd.zip --clobber

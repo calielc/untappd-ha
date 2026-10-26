@@ -1,0 +1,28 @@
+name: Bug report
+description: Something is wrong with the integration
+body:
+  - type: input
+    id: ha_version
+    attributes:
+      label: Home Assistant version
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Integration version
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: Include whether your Untappd profile is public. If sensors are unavailable, Untappd may have changed its page.
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs and diagnostics
+      description: Debug logs for `custom_components.untappd` and the downloaded diagnostics file, if relevant.
+      render: text
