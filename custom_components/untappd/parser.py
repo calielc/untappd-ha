@@ -43,6 +43,7 @@ class ProfileData:
     username: str
     stats: dict[str, int] = field(default_factory=dict)
     checkins: list[Checkin] = field(default_factory=list)
+    beer_stats: dict[str, object] = field(default_factory=dict)
 
     @property
     def last_checkin(self) -> Checkin | None:

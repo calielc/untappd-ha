@@ -21,8 +21,25 @@ or credentials are needed.
 | Last check-in | Timestamp, with beer, brewery, venue, rating, comment and links as attributes |
 | Last beer | Name of the last beer checked in |
 | Last rating | Rating on the last check-in |
+| Recent check-in 1 to 4 | Beer and brewery of each of your latest check-ins, with rating, venue, time and picture as attributes (Strava-style cards) |
 | Check-in (event) | Fires `new_checkin` for each new check-in |
 
+### Beer-history statistics (optional, needs a session cookie)
+
+| Entity | Description |
+| --- | --- |
+| Average rating / Average global rating | Your mean rating, and the community mean for the same beers |
+| Rated beers | Beers you have rated (rating distribution as an attribute) |
+| Average ABV / Average IBU | Means over your beer history |
+| Unique breweries / Unique styles | Distinct counts |
+| Top style / Top brewery | Most-checked-in, with the top 10 as attributes |
+| Highest rated beer | Your top 5 as an attribute |
+| Strongest beer | Highest ABV |
+| New beers this year / last 30 days | Beers first checked in during the period |
+
+These sensors stay empty until the first full sync finishes (about 1 to 2 minutes, one
+page of 25 beers every 1.5 seconds). The history is cached on disk, refreshed from the
+newest page on every update and fully re-synced once a day.
 ## Installation
 
 ### HACS (custom repository)
@@ -42,6 +59,23 @@ username. Your profile must be public.
 
 The update interval defaults to 30 minutes (minimum 15). Change it in the integration's
 options.
+
+### Session cookie (optional)
+
+Untappd's login page uses a CAPTCHA, so the integration cannot sign in for you. Instead:
+
+1. Sign in to untappd.com in your browser.
+2. Open developer tools → **Network**, reload, and click any `untappd.com` request.
+3. Copy the **`Cookie`** request header value and paste it into the setup form. If
+   requests get blocked, paste your browser's `User-Agent` header too.
+
+When the cookie expires, Home Assistant shows a **Repair / re-authentication** prompt
+where you paste a fresh one. The cookie is stored in your Home Assistant config, so treat
+that config like a password store. It only works for your own account's history.
+
+> This uses the website's own pages with your own session. It is more likely to run
+> against Untappd's terms than the public-profile mode and can break whenever the site
+> changes. Use it at your own risk.
 
 ### Multiple users
 

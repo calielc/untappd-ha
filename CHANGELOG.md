@@ -10,4 +10,6 @@ All notable changes to this project are documented here. The format follows
 - Sensors for total check-ins, unique beers, badges, friends, last check-in, last beer and last rating.
 - Event entity that fires `new_checkin`.
 - Config flow with username validation, and an options flow for the update interval.
+- Recent check-in 1 to 4 sensors.
+- Optional session-cookie mode with beer-history statistics, a disk cache, and re-authentication.
 - Diagnostics.

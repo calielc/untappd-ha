@@ -17,3 +17,14 @@ MIN_SCAN_INTERVAL = 15  # minutes
 UPDATE_INTERVAL = timedelta(minutes=DEFAULT_SCAN_INTERVAL)
 
 EVENT_NEW_CHECKIN = "new_checkin"
+
+CONF_COOKIE = "cookie"
+CONF_USER_AGENT = "user_agent"
+
+# Only used with a session cookie (logged-in beer history).
+BROWSER_USER_AGENT = (
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+)
+FULL_SYNC_INTERVAL = timedelta(hours=24)
+PAGE_DELAY = 1.5  # seconds between beer-history pages
+MAX_PAGES = 200

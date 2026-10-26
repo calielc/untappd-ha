@@ -3,16 +3,33 @@
     "step": {
       "user": {
         "title": "Untappd",
-        "description": "Untappd closed its public API, so this reads your public profile page (untappd.com/user/<username>). Your profile must be public.",
-        "data": { "username": "Untappd username" }
+        "description": "Untappd closed its public API, so this reads your Untappd pages.\n\n**Username only:** your public profile (stats and recent check-ins). The profile must be public.\n\n**Optional session cookie:** adds beer-history statistics (average rating, top styles and breweries, strongest beer and more). Untappd's login page uses a CAPTCHA, so the integration cannot sign in for you. Sign in to untappd.com in your browser, open developer tools > Network, click any untappd.com request and copy the `Cookie` request header. Also paste your browser's `User-Agent` if requests get blocked. The cookie is stored in your Home Assistant config and expires eventually; you will be asked for a new one.",
+        "data": {
+          "username": "Untappd username",
+          "cookie": "Session cookie (optional)",
+          "user_agent": "Browser User-Agent (optional)"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Untappd session expired",
+        "description": "The Untappd session for {username} is missing or expired. Sign in to untappd.com in your browser and paste the `Cookie` request header again.",
+        "data": {
+          "cookie": "Session cookie",
+          "user_agent": "Browser User-Agent (optional)"
+        }
       }
     },
     "error": {
       "user_not_found": "No Untappd user with that name.",
       "profile_unreadable": "The profile could not be read. It may be private, or Untappd changed its page.",
+      "invalid_auth": "That cookie was rejected. Make sure you are signed in and copy the full Cookie header.",
+      "beer_history_unreadable": "Signed in, but the beer history page could not be read. Untappd may be blocking the request; try pasting your browser's User-Agent too.",
       "cannot_connect": "Could not reach untappd.com."
     },
-    "abort": { "already_configured": "This Untappd user is already configured." }
+    "abort": {
+      "already_configured": "This Untappd user is already configured.",
+      "reauth_successful": "Session updated."
+    }
   },
   "options": {
     "step": {
@@ -29,7 +46,21 @@
       "friends": { "name": "Friends" },
       "last_checkin": { "name": "Last check-in" },
       "last_beer": { "name": "Last beer" },
-      "last_rating": { "name": "Last rating" }
+      "last_rating": { "name": "Last rating" },
+      "recent_checkin": { "name": "Recent check-in {n}" },
+      "average_rating": { "name": "Average rating" },
+      "average_global_rating": { "name": "Average global rating" },
+      "rated_beers": { "name": "Rated beers" },
+      "average_abv": { "name": "Average ABV" },
+      "average_ibu": { "name": "Average IBU" },
+      "unique_breweries": { "name": "Unique breweries" },
+      "unique_styles": { "name": "Unique styles" },
+      "top_style": { "name": "Top style" },
+      "top_brewery": { "name": "Top brewery" },
+      "highest_rated": { "name": "Highest rated beer" },
+      "strongest_beer": { "name": "Strongest beer" },
+      "beers_this_year": { "name": "New beers this year" },
+      "beers_last_30_days": { "name": "New beers last 30 days" }
     },
     "event": {
       "checkin": {
