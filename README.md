@@ -43,6 +43,12 @@ username. Your profile must be public.
 The update interval defaults to 30 minutes (minimum 15). Change it in the integration's
 options.
 
+### Multiple users
+
+Add the integration once per username (Devices & Services → Untappd → **Add entry**).
+Each user gets their own device, sensors, event entity and update interval. Every profile
+must be public, and each one is a separate request to Untappd, so keep intervals gentle.
+
 ## Automation example
 
 ```yaml
