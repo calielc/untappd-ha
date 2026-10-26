@@ -4,6 +4,11 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses
 [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Changed
+- Recent check-in sensors now cover all 5 check-ins the public profile lists (was 4).
+
 ## [0.1.1] - 2026-10-26
 
 ### Added

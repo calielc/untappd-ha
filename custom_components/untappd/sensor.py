@@ -23,7 +23,7 @@ from .parser import Checkin, ProfileData
 
 PARALLEL_UPDATES = 0
 
-RECENT_CHECKINS = 4
+RECENT_CHECKINS = 5
 
 
 @dataclass(frozen=True, kw_only=True)

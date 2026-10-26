@@ -21,7 +21,7 @@ or credentials are needed.
 | Last check-in | Timestamp, with beer, brewery, venue, rating, comment and links as attributes |
 | Last beer | Name of the last beer checked in |
 | Last rating | Rating on the last check-in |
-| Recent check-in 1 to 4 | Beer and brewery of each of your latest check-ins, with rating, venue, time and picture as attributes (Strava-style cards) |
+| Recent check-in 1 to 5 | Beer and brewery of each of your latest check-ins, with rating, venue, time and picture as attributes (Strava-style cards) |
 | Check-in (event) | Fires `new_checkin` for each new check-in |
 
 ### Beer-history statistics (optional, needs a session cookie)
