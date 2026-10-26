@@ -40,6 +40,7 @@ or credentials are needed.
 These sensors stay empty until the first full sync finishes (about 1 to 2 minutes, one
 page of 25 beers every 1.5 seconds). The history is cached on disk, refreshed from the
 newest page on every update and fully re-synced once a day.
+
 ## Installation
 
 ### HACS (custom repository)
