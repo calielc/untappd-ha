@@ -72,7 +72,9 @@ Untappd's login page uses a CAPTCHA, so the integration cannot sign in for you. 
 
 When the cookie expires, Home Assistant shows a **Repair / re-authentication** prompt
 where you paste a fresh one. The cookie is stored in your Home Assistant config, so treat
-that config like a password store. It only works for your own account's history.
+that config like a password store. The beer-history page of the configured username is read
+with your session, so what you get depends on what Untappd shows your account for that user.
+It has only been tried with the signed-in user's own history.
 
 > This uses the website's own pages with your own session. It is more likely to run
 > against Untappd's terms than the public-profile mode and can break whenever the site
@@ -103,7 +105,8 @@ actions:
 
 - The profile page lists only the 5 most recent check-ins, so more than 5 between polls
   means missed events.
-- Only your own public profile is read.
+- It reads the public profile of whatever username you enter, so you can add friends or anyone
+  else with a public profile. Private profiles cannot be read.
 
 ## License
 
