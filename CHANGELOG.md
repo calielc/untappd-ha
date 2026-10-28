@@ -4,6 +4,14 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses
 [Semantic Versioning](https://semver.org/).
 
+## [0.1.3] - 2026-10-28
+
+### Added
+- Happy-hour polling: a faster interval (default 15 min, 17:00 to 01:00) with the normal interval (30 min) the rest of the day. All four values are in the options.
+
+### Fixed
+- New check-ins no longer wait up to 4 hours: the profile request skips Untappd's CDN cache.
+
 ## [0.1.2] - 2026-10-26
 
 ### Changed

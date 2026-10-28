@@ -10,13 +10,19 @@ from aiohttp import ClientError
 from homeassistant.config_entries import ConfigEntry, ConfigFlow, ConfigFlowResult, OptionsFlow
 from homeassistant.core import callback
 from homeassistant.exceptions import ConfigEntryAuthFailed
-from homeassistant.helpers.selector import TextSelector, TextSelectorConfig
+from homeassistant.helpers.selector import TextSelector, TextSelectorConfig, TimeSelector
 
 from .const import (
     CONF_COOKIE,
+    CONF_HAPPY_END,
+    CONF_HAPPY_INTERVAL,
+    CONF_HAPPY_START,
     CONF_SCAN_INTERVAL,
     CONF_USER_AGENT,
     CONF_USERNAME,
+    DEFAULT_HAPPY_END,
+    DEFAULT_HAPPY_INTERVAL,
+    DEFAULT_HAPPY_START,
     DEFAULT_SCAN_INTERVAL,
     DOMAIN,
     MIN_SCAN_INTERVAL,
@@ -123,14 +129,20 @@ class UntappdOptionsFlow(OptionsFlow):
     async def async_step_init(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
         if user_input is not None:
             return self.async_create_entry(data=user_input)
-        current = self.config_entry.options.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)
+        o = self.config_entry.options
+        minutes = vol.All(vol.Coerce(int), vol.Range(min=MIN_SCAN_INTERVAL, max=1440))
         return self.async_show_form(
             step_id="init",
             data_schema=vol.Schema(
                 {
-                    vol.Required(CONF_SCAN_INTERVAL, default=current): vol.All(
-                        vol.Coerce(int), vol.Range(min=MIN_SCAN_INTERVAL, max=1440)
-                    )
+                    vol.Required(CONF_SCAN_INTERVAL, default=o.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)): minutes,
+                    vol.Required(
+                        CONF_HAPPY_INTERVAL, default=o.get(CONF_HAPPY_INTERVAL, DEFAULT_HAPPY_INTERVAL)
+                    ): minutes,
+                    vol.Required(
+                        CONF_HAPPY_START, default=o.get(CONF_HAPPY_START, DEFAULT_HAPPY_START)
+                    ): TimeSelector(),
+                    vol.Required(CONF_HAPPY_END, default=o.get(CONF_HAPPY_END, DEFAULT_HAPPY_END)): TimeSelector(),
                 }
             ),
         )

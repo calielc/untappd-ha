@@ -28,3 +28,11 @@ BROWSER_USER_AGENT = (
 FULL_SYNC_INTERVAL = timedelta(hours=24)
 PAGE_DELAY = 1.5  # seconds between beer-history pages
 MAX_PAGES = 200
+
+# Poll faster in the evening, when check-ins usually happen.
+CONF_HAPPY_INTERVAL = "happy_hour_interval"
+CONF_HAPPY_START = "happy_hour_start"
+CONF_HAPPY_END = "happy_hour_end"
+DEFAULT_HAPPY_INTERVAL = 15  # minutes
+DEFAULT_HAPPY_START = "17:00:00"
+DEFAULT_HAPPY_END = "01:00:00"
