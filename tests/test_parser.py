@@ -71,3 +71,8 @@ def test_profile_without_checkins() -> None:
     data = parser.parse_profile(stats_only, "testuser")
     assert data.checkins == []
     assert data.last_checkin is None
+
+
+def test_profile_url() -> None:
+    assert parser.profile_url("testuser") == "https://untappd.com/user/testuser"
+    assert parser.profile_url("testuser", 123) == "https://untappd.com/user/testuser?cb=123"

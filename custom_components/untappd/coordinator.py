@@ -4,7 +4,9 @@ from __future__ import annotations
 
 import asyncio
 import logging
+import time
 from datetime import datetime, timedelta
+from datetime import time as dtime
 
 from aiohttp import ClientError
 from homeassistant.config_entries import ConfigEntry
@@ -20,9 +22,15 @@ from .const import (
     BASE_URL,
     BROWSER_USER_AGENT,
     CONF_COOKIE,
+    CONF_HAPPY_END,
+    CONF_HAPPY_INTERVAL,
+    CONF_HAPPY_START,
     CONF_SCAN_INTERVAL,
     CONF_USER_AGENT,
     CONF_USERNAME,
+    DEFAULT_HAPPY_END,
+    DEFAULT_HAPPY_INTERVAL,
+    DEFAULT_HAPPY_START,
     DEFAULT_SCAN_INTERVAL,
     DOMAIN,
     FULL_SYNC_INTERVAL,
@@ -30,7 +38,8 @@ from .const import (
     PAGE_DELAY,
     USER_AGENT,
 )
-from .parser import ProfileData, parse_profile
+from .parser import ProfileData, parse_profile, profile_url
+from .schedule import pick_interval_minutes
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -63,7 +72,7 @@ async def async_fetch_html(
 
 async def async_fetch_profile(hass: HomeAssistant, username: str) -> ProfileData:
     """Fetch and parse a public profile."""
-    html = await async_fetch_html(hass, f"{BASE_URL}/user/{username}")
+    html = await async_fetch_html(hass, profile_url(username, int(time.time())))
     return parse_profile(html, username)
 
 
@@ -89,13 +98,17 @@ class UntappdCoordinator(DataUpdateCoordinator[ProfileData]):
     config_entry: ConfigEntry
 
     def __init__(self, hass: HomeAssistant, entry: ConfigEntry) -> None:
-        minutes = entry.options.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)
+        options = entry.options
+        self._normal_minutes: int = options.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)
+        self._happy_minutes: int = options.get(CONF_HAPPY_INTERVAL, DEFAULT_HAPPY_INTERVAL)
+        self._happy_start = dtime.fromisoformat(options.get(CONF_HAPPY_START, DEFAULT_HAPPY_START))
+        self._happy_end = dtime.fromisoformat(options.get(CONF_HAPPY_END, DEFAULT_HAPPY_END))
         super().__init__(
             hass,
             _LOGGER,
             config_entry=entry,
             name=f"{DOMAIN}_{entry.data[CONF_USERNAME]}",
-            update_interval=timedelta(minutes=minutes),
+            update_interval=timedelta(minutes=self._current_minutes()),
         )
         self.username: str = entry.data[CONF_USERNAME]
         self.cookie: str | None = entry.data.get(CONF_COOKIE) or None
@@ -104,6 +117,12 @@ class UntappdCoordinator(DataUpdateCoordinator[ProfileData]):
         self._last_full_sync: datetime | None = None
         self._syncing = False
         self._store: Store[dict] = Store(hass, 1, f"{DOMAIN}.{self.username.lower()}.beers")
+
+    def _current_minutes(self) -> int:
+        """Local time decides: faster polling during happy hour, normal otherwise."""
+        return pick_interval_minutes(
+            dt_util.now().time(), self._normal_minutes, self._happy_minutes, self._happy_start, self._happy_end
+        )
 
     async def async_load_library(self) -> None:
         """Restore the cached beer history so a restart does not need a full re-sync."""
@@ -117,6 +136,8 @@ class UntappdCoordinator(DataUpdateCoordinator[ProfileData]):
             self._last_full_sync = dt_util.parse_datetime(synced)
 
     async def _async_update_data(self) -> ProfileData:
+        # The next refresh is scheduled after this one, using the interval set here.
+        self.update_interval = timedelta(minutes=self._current_minutes())
         try:
             data = await async_fetch_profile(self.hass, self.username)
             if self.cookie:

@@ -50,6 +50,16 @@ class ProfileData:
         return self.checkins[0] if self.checkins else None
 
 
+def profile_url(username: str, cache_buster: int | None = None) -> str:
+    """Public profile URL.
+
+    Untappd serves it through a CDN cache of up to 4 hours; a unique query string
+    makes each poll read a fresh copy, so new check-ins show within one update interval.
+    """
+    url = f"{BASE_URL}/user/{username}"
+    return f"{url}?cb={cache_buster}" if cache_buster is not None else url
+
+
 def _int(value: str) -> int | None:
     try:
         return int(value.replace(",", "").split(".")[0])
